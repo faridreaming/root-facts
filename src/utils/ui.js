@@ -6,24 +6,24 @@ export const commonStyles = {
     border: '1px solid #fecaca',
     borderRadius: 'var(--radius-md)',
     color: '#991b1b',
-    fontSize: '0.875rem'
+    fontSize: '0.875rem',
   },
 
   warningContainer: {
     color: '#92400e',
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
 
   loadingContainer: {
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.5rem',
   },
 
   smallSpinner: {
     width: '1rem',
     height: '1rem',
-    marginBottom: 0
+    marginBottom: 0,
   },
 
   errorToast: {
@@ -42,7 +42,7 @@ export const commonStyles = {
     zIndex: 1000,
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.5rem',
   },
 
   closeButton: {
@@ -54,8 +54,8 @@ export const commonStyles = {
     fontWeight: 'bold',
     fontSize: '1.25rem',
     padding: 0,
-    lineHeight: 1
-  }
+    lineHeight: 1,
+  },
 };
 
 /* ===== Confidence Theme ===== */
@@ -73,5 +73,5 @@ export const getConfidenceTextClass = (confidence) => {
 
 export const createProgressBarStyle = (percentage, duration = '1s') => ({
   width: `${percentage}%`,
-  transition: `width ${duration} ease-out`
+  transition: `width ${duration} ease-out`,
 });

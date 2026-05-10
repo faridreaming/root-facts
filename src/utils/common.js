@@ -7,10 +7,14 @@ export const isWebGPUSupported = () => {
 };
 
 export const isMobileDevice = () => {
-  return navigator.userAgentData?.mobile ?? /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  return (
+    navigator.userAgentData?.mobile ??
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  );
 };
 
-export const createDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+export const createDelay = (ms) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const validateModelMetadata = (metadata) => {
   return metadata && metadata.labels && Array.isArray(metadata.labels);
@@ -18,9 +22,9 @@ export const validateModelMetadata = (metadata) => {
 
 export const getCameraErrorMessage = (error) => {
   const errorMessages = {
-    'NotAllowedError': 'Izin kamera ditolak. Harap izinkan akses kamera.',
-    'NotFoundError': 'Tidak ada kamera ditemukan pada perangkat ini.',
-    'NotReadableError': 'Kamera sedang digunakan oleh aplikasi lain.'
+    NotAllowedError: 'Izin kamera ditolak. Harap izinkan akses kamera.',
+    NotFoundError: 'Tidak ada kamera ditemukan pada perangkat ini.',
+    NotReadableError: 'Kamera sedang digunakan oleh aplikasi lain.',
   };
 
   return errorMessages[error.name] || 'Gagal memulai kamera';

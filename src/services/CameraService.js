@@ -4,6 +4,8 @@ export class CameraService {
     this.video = null;
     this.canvas = null;
     this.config = null;
+    this.frameInterval = 1000 / 30;
+    this.lastFrameTime = 0;
   }
 
   setVideoElement(videoElement) {
@@ -18,18 +20,68 @@ export class CameraService {
   // TODO [Basic] Dapatkan constraints kamera berdasarkan konfigurasi dan kamera yang dipilih
   async loadCameras() {}
 
-  // TODO [Basic] Memulai kamera dengan perangkat yang dipilih dan menampilkan pada elemen video
-  async startCamera(selectedCameraId) {}
+  async startCamera(cameraType = 'default') {
+    this.stopCamera();
 
-  // TODO [Basic] Menghentikan siaran kamera dan membersihkan sumber daya
-  stopCamera() {}
+    const facingMode = cameraType === 'front' ? 'user' : 'environment';
 
-  // TODO [Skilled] Implementasikan metode untuk mengatur FPS kamera
-  setFPS(fps) {}
+    const constraints = {
+      video: {
+        facingMode,
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+      },
+      audio: false,
+    };
 
-  // TODO [Basic] Periksa apakah kamera sedang aktif
-  isActive() {}
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+      this.video.srcObject = this.stream;
 
-  // TODO [Basic] Periksa apakah elemen video siap untuk digunakan
-  isReady() {}
+      await new Promise((resolve, reject) => {
+        this.video.onloadedmetadata = resolve;
+        this.video.onerror = reject;
+      });
+
+      await this.video.play();
+      console.log('✅ Kamera aktif');
+    } catch (error) {
+      console.error('❌ Gagal membuka kamera:', error);
+      throw error;
+    }
+  }
+
+  stopCamera() {
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
+    }
+
+    if (this.video) {
+      this.video.srcObject = null;
+    }
+
+    console.log('🛑 Kamera dihentikan');
+  }
+
+  setFPS(fps) {
+    this.frameInterval = 1000 / fps;
+  }
+
+  shouldProcessFrame() {
+    const now = performance.now();
+    if (now - this.lastFrameTime >= this.frameInterval) {
+      this.lastFrameTime = now;
+      return true;
+    }
+    return false;
+  }
+
+  isActive() {
+    return this.stream !== null && this.stream.active;
+  }
+
+  isReady() {
+    return this.video !== null && this.video.readyState >= 2;
+  }
 }

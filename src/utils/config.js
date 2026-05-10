@@ -2,7 +2,7 @@ export const APP_CONFIG = {
   detectionConfidenceThreshold: 70,
   analyzingDelay: 2000,
   factsGenerationDelay: 2000,
-  detectionRetryInterval: 100
+  detectionRetryInterval: 100,
 };
 
 export const TONE_CONFIG = {
@@ -10,12 +10,16 @@ export const TONE_CONFIG = {
     { value: 'normal', label: 'Normal' },
     { value: 'funny', label: 'Lucu' },
     { value: 'professional', label: 'Profesional' },
-    { value: 'casual', label: 'Santai' }
+    { value: 'casual', label: 'Santai' },
   ],
-  defaultTone: 'normal'
+  defaultTone: 'normal',
 };
 
 export const isValidDetection = (result) => {
   const { detectionConfidenceThreshold } = APP_CONFIG;
-  return result && result.isValid && result.confidence >= detectionConfidenceThreshold;
+  return (
+    result &&
+    result.isValid &&
+    result.confidence >= detectionConfidenceThreshold
+  );
 };
