@@ -1,1 +1,2 @@
-APP_URL=
+Nama: Muhammad Farid Yain
+URL: https://fatkasayur.netlify.app/
