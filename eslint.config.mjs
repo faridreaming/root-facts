@@ -1,5 +1,6 @@
 import daStyle from 'eslint-config-dicodingacademy';
 import pluginReact from 'eslint-plugin-react';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default [
   daStyle,
@@ -30,7 +31,8 @@ export default [
       ...pluginReact.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
-      'camelcase': 'off',
+      camelcase: 'off',
     },
   },
+  eslintPluginPrettierRecommended,
 ];
