@@ -1,6 +1,19 @@
-import { Sparkles, Search, CheckCircle, Lightbulb, Copy, Share2 } from 'lucide-react';
+import {
+  Sparkles,
+  Search,
+  CheckCircle,
+  Lightbulb,
+  Copy,
+  Share2,
+} from 'lucide-react';
 
-function InfoPanel({ appState, detectionResult, funFactData, error, onCopyFact }) {
+function InfoPanel({
+  appState,
+  detectionResult,
+  funFactData,
+  error,
+  onCopyFact,
+}) {
   const isIdle = appState === 'idle';
   const isAnalyzing = appState === 'analyzing';
   const isResult = appState === 'result';
@@ -11,9 +24,14 @@ function InfoPanel({ appState, detectionResult, funFactData, error, onCopyFact }
         <Sparkles size={40} />
       </div>
       <h2>Scan Sayuran</h2>
-      <p>Ketuk tombol di bawah untuk memulai dan temukan fakta menarik tentang sayuran!</p>
+      <p>
+        Ketuk tombol di bawah untuk memulai dan temukan fakta menarik tentang
+        sayuran!
+      </p>
       {error && (
-        <p style={{ color: '#ef4444', fontSize: '0.8125rem', marginTop: '1rem' }}>
+        <p
+          style={{ color: '#ef4444', fontSize: '0.8125rem', marginTop: '1rem' }}
+        >
           {error}
         </p>
       )}
@@ -50,14 +68,17 @@ function InfoPanel({ appState, detectionResult, funFactData, error, onCopyFact }
 
       if (funFactData === 'error') {
         return (
-          <div style={{ 
-            padding: '0.75rem', 
-            background: '#fef3c7', 
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '0.875rem',
-            color: '#92400e'
-          }}>
-            Gagal menghasilkan fakta menarik. Mode offline atau layanan tidak tersedia.
+          <div
+            style={{
+              padding: '0.75rem',
+              background: '#fef3c7',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '0.875rem',
+              color: '#92400e',
+            }}
+          >
+            Gagal menghasilkan fakta menarik. Mode offline atau layanan tidak
+            tersedia.
           </div>
         );
       }
@@ -96,13 +117,15 @@ function InfoPanel({ appState, detectionResult, funFactData, error, onCopyFact }
         <div className="confidence-bar">
           <span className="confidence-label">Kepercayaan</span>
           <div className="confidence-track">
-            <div 
+            <div
               id="confidence-fill"
-              className="confidence-fill" 
+              className="confidence-fill"
               style={{ width: `${confidence}%` }}
             ></div>
           </div>
-          <span id="detected-confidence" className="confidence-value">{confidence}%</span>
+          <span id="detected-confidence" className="confidence-value">
+            {confidence}%
+          </span>
         </div>
 
         <div className="share-hint">

@@ -5,6 +5,7 @@ import InfoPanel from './components/InfoPanel';
 import { useAppState } from './hooks/useAppState';
 import { DetectionService } from './services/DetectionService';
 import { CameraService } from './services/CameraService';
+import { RootFactsService } from './services/RootFactsService';
 
 function App() {
   const { state, actions } = useAppState();
@@ -15,8 +16,9 @@ function App() {
   useEffect(() => {
     const detector = new DetectionService();
     const camera = new CameraService();
+    const generator = new RootFactsService();
 
-    actions.setServices({ detector, camera, generator: null });
+    actions.setServices({ detector, camera, generator });
 
     detector
       .loadModel((percent, message) => {
@@ -29,11 +31,17 @@ function App() {
         actions.setModelStatus('Gagal memuat model');
         actions.setError(err.message);
       });
+
+    generator
+      .loadModel((percent, message) => {
+        console.log(`Model teks: ${message} (${percent}%)`);
+      })
+      .catch((err) => {
+        console.warn('Model teks gagal dimuat:', err.message);
+      });
   }, []);
 
-  // TODO [Basic] Bersihkan sumber daya saat komponen ditinggalkan
-
-  const startDetectionLoop = (detector, camera) => {
+  const startDetectionLoop = (detector, camera, generator) => {
     isRunningRef.current = true;
 
     const loop = async () => {
@@ -49,6 +57,12 @@ function App() {
         if (result && result.confidence >= 70) {
           actions.setDetectionResult(result);
           actions.setAppState('result');
+          actions.setFunFactData(null);
+
+          if (generator.isReady()) {
+            const fact = await generator.generateFacts(result.className);
+            actions.setFunFactData(fact ?? 'error');
+          }
         }
       }
 
@@ -70,16 +84,34 @@ function App() {
         await state.services.camera.startCamera();
         actions.setRunning(true);
         actions.setAppState('analyzing');
-        startDetectionLoop(state.services.detector, state.services.camera);
+        startDetectionLoop(
+          state.services.detector,
+          state.services.camera,
+          state.services.generator,
+        );
       } catch (error) {
         actions.setError(error.message);
       }
     }
   };
 
-  // TODO [Advance] Fungsi untuk mengubah nada fakta yang dihasilkan
+  const handleToneChange = (newTone) => {
+    setCurrentTone(newTone);
+    if (state.services.generator) {
+      state.services.generator.setTone(newTone);
+    }
+  };
 
-  // TODO [Skilled] Fungsi untuk menyalin fakta ke clipboard
+  const handleCopyFact = async () => {
+    if (!state.funFactData) return;
+
+    try {
+      await navigator.clipboard.writeText(state.funFactData);
+      console.log('✅ Fakta disalin!');
+    } catch (error) {
+      console.error('❌ Gagal menyalin:', error);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -89,6 +121,7 @@ function App() {
         <CameraSection
           isRunning={state.isRunning}
           onToggleCamera={handleToggleCamera}
+          onToneChange={handleToneChange}
           services={state.services}
           modelStatus={state.modelStatus}
           error={state.error}
@@ -100,6 +133,7 @@ function App() {
           detectionResult={state.detectionResult}
           funFactData={state.funFactData}
           error={state.error}
+          onCopyFact={handleCopyFact}
         />
       </main>
 
